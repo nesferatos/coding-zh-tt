@@ -8,7 +8,7 @@ public class CounterData {
 
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "counter_id", nullable = false)
@@ -18,10 +18,9 @@ public class CounterData {
 
     private Double amount;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
-
 
     public Counter getCounter() {
         return counter;
@@ -33,10 +32,6 @@ public class CounterData {
 
     public Timestamp getTimestamp() {
         return timestamp;
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
     }
 
     public Double getAmount() {

@@ -8,12 +8,27 @@ public class Village {
 
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
     @Column(unique = true)
     private String name;
 
-
     @OneToMany(mappedBy = "village")
     private List<Counter> counters;
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Counter> getCounters() {
+        return counters;
+    }
 }

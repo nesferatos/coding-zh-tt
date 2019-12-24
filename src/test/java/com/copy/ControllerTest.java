@@ -32,23 +32,29 @@ class ControllerTest {
 
     @Test
     void counterСallback() throws Exception {
-        mvc.perform(get("/counter_create")
+        mvc.perform(post("/village_create")
                 .param("code", "2")
+                .param("villageName", "Villaribo")
                 .contentType(MediaType.TEXT_HTML_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.TEXT_HTML_VALUE));
 
 
-
-
-        mvc.perform(post("/counter_callback")
-                .content("{\"counter_id\": \"1\",\"amount\": 10000.123}")
-                .contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(post("/counter_create")
+                .param("code", "2")
+                .param("villageName", "Villaribo")
+                .contentType(MediaType.TEXT_HTML_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.TEXT_HTML_VALUE));
 
+        mvc.perform(post("/counter_callback")
+                .content("{\"counter_id\": 2,\"amount\": 10000.123}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.TEXT_HTML_VALUE));
 
         System.out.println();
                 //.andExpect(jsonPath("$[0].name", is("bob")));
