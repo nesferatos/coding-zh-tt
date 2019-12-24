@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.client.RestTemplate;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
@@ -41,22 +42,31 @@ class ControllerTest {
                         .contentTypeCompatibleWith(MediaType.TEXT_HTML_VALUE));
 
 
-        mvc.perform(post("/counter_create")
-                .param("code", "2")
+        ResultActions resultActions = mvc.perform(post("/counter_create")
                 .param("villageName", "Villaribo")
                 .contentType(MediaType.TEXT_HTML_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.TEXT_HTML_VALUE));
 
+        String counterId = resultActions.andReturn().getResponse().getContentAsString();
+
+
         mvc.perform(post("/counter_callback")
-                .content("{\"counter_id\": 2,\"amount\": 10000.123}")
+                .content("{\"counter_id\": " + counterId + ",\"amount\": 10000.123}")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.TEXT_HTML_VALUE));
 
-        System.out.println();
-                //.andExpect(jsonPath("$[0].name", is("bob")));
+
+        mvc.perform(post("/counter_callback")
+                .content("{\"counter_id\": " + counterId + ",\"amount\": 20000.123}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.TEXT_HTML_VALUE));
+
+
     }
 }

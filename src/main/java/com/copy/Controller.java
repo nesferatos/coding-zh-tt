@@ -52,7 +52,7 @@ public class Controller {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
         logger.debug("counter [{}] created", counter.getId());
-        return ResponseEntity.ok("counter [" + counter.getId() + "] created");
+        return ResponseEntity.ok(counter.getId().toString());
     }
 
     @PostMapping(value = "/village_create", consumes = MediaType.TEXT_HTML_VALUE, produces = MediaType.TEXT_HTML_VALUE)
@@ -65,6 +65,6 @@ public class Controller {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
         logger.debug("village [{}] created", village.getId());
-        return ResponseEntity.ok("village [" + village.getId() + "] created");
+        return ResponseEntity.ok(village.getId().toString());
     }
 }
