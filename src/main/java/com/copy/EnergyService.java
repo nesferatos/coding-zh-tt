@@ -3,15 +3,17 @@ package com.copy;
 import com.copy.model.Counter;
 import com.copy.model.CounterData;
 import com.copy.model.Village;
+import com.copy.model.VillageReportRec;
 import com.copy.repository.CounterDataRepository;
 import com.copy.repository.CounterRepository;
 import com.copy.repository.VillageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.UUID;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.util.*;
 
 @Service
 public class EnergyService {
@@ -47,5 +49,11 @@ public class EnergyService {
         counterData.setAmount(amount);
         counterData.setCounter(counter);
         counterDataRepository.save(counterData);
+    }
+
+    public List<VillageReportRec> getVillageConsumptionReport(Duration durationBeforeNow) {
+        Timestamp since = new Timestamp(System.currentTimeMillis() - durationBeforeNow.toMillis());
+        List<VillageReportRec> report = villageRepository.getConsumptionReport(since);
+        return report;
     }
 }

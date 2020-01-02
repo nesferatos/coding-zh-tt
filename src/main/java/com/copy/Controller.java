@@ -3,6 +3,7 @@ package com.copy;
 
 import com.copy.model.Counter;
 import com.copy.model.Village;
+import com.copy.model.VillageReportRec;
 import com.copy.repository.CounterRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
@@ -13,7 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.NoSuchElementException;
+import java.time.Duration;
+import java.util.*;
 
 @RestController
 public class Controller {
@@ -22,6 +24,9 @@ public class Controller {
 
     @Autowired
     private EnergyService energyService;
+
+    @Autowired
+    private CounterRepository counterRepository;
 
     private static final String COUNTER_ID = "counter_id";
 
@@ -66,5 +71,28 @@ public class Controller {
         }
         logger.debug("village [{}] created", village.getId());
         return ResponseEntity.ok(village.getId().toString());
+    }
+
+    @GetMapping(value = "counter", consumes = MediaType.TEXT_HTML_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> counter(@RequestParam Long id) {
+        Optional<Counter> counter = counterRepository.findById(id);
+        if (counter.isPresent()) {
+            HashMap<Object, Object> counterInfo = new HashMap<>();
+            String name = counter.get().getVillage().getName();
+            counterInfo.put("id", counter.get().getId());
+            counterInfo.put("village_name", counter.get().getVillage().getName());
+            return new ResponseEntity(counterInfo, HttpStatus.OK);//TODO: return json
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "consumption_report", consumes = MediaType.TEXT_HTML_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<Object, Object>> consumptionReport(@RequestParam String duration) {
+        Duration d = Duration.parse("PT" + duration);
+
+        Map<String, Object> report = new HashMap<>();
+        report.put("villages", energyService.getVillageConsumptionReport(d));
+        return new ResponseEntity(report, HttpStatus.OK);
     }
 }

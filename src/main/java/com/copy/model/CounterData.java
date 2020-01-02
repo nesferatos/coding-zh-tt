@@ -14,7 +14,7 @@ public class CounterData {
     @JoinColumn(name = "counter_id", nullable = false)
     private Counter counter;
 
-    private Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+    private Timestamp created = new Timestamp(System.currentTimeMillis());
 
     private Double amount;
 
@@ -30,8 +30,8 @@ public class CounterData {
         this.counter = counter;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public Timestamp getCreated() {
+        return created;
     }
 
     public Double getAmount() {
